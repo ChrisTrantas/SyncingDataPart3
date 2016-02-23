@@ -17,7 +17,7 @@ app.listen(PORT);
 
 // draw array
 var draws = {};
-
+var user = {};
 //Overall object to show maintained by the server
 var square = {
     lastUpdate: new Date().getTime(),
@@ -50,12 +50,12 @@ io.on('connection', function (socket) {
 	
 	// Uses initial data to draw client square
     socket.on('initial', function(data) {
-		draws[data.time] = data.data;
+		draws[data.time] = data.coords;
 		var message =
 		{
 			message: "",
-			data: draws[data.time]
-		}
+			data: draws
+		};
 	 
     io.sockets.in('room1').emit('update', message); 
   });
@@ -63,8 +63,7 @@ io.on('connection', function (socket) {
    socket.on('draw', function(data) {  
 	draws[user] = data.coords;
     io.sockets.in('room1').emit('handleMessage', draws); 
-  });
-  
+  });  
 
   socket.on('disconnect', function(data) {
 	  delete draws[data.time];

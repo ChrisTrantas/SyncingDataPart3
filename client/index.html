@@ -45,17 +45,17 @@
         }
 
         function update(data) {
-            square = data;
+			updatePostion();
+            draws = data.data;
             //redraw new data to the screen
             draw();
         }
 		function setCalls()
 		{
 			var time = new Date().getTime();
-			draws[time] = {x: Math.random() * 300, y: Math.random() * 300, width: 100, height: 100};
-			time = new Date().getTime();
+			draws[time] = {x: Math.random() * 300, y: Math.random() * 300, width: 100, height: 100};	
 			var coords = {x:0,y:0,width:100, height:100};
-			socket.emit('initial',{time: time, coords: coords});
+			socket.emit('initial',{time: time, coords: draws[time]});
 		}
 		
 		function setup()
@@ -63,6 +63,8 @@
 			var time = new Date().getTime();
 			var x = Math.floor(Math.random()*(300-10)+10);
 			var y = Math.floor(Math.random()*(300-10)+10);
+			draws[time] = {x: Math.random() * 300, y: Math.random() * 300, width: 100, height: 100};	
+			var coords = {x:0,y:0,width:100, height:100};
 			draws[user] = {lastUpdate: time, x:x, y:y, width: 100, height: 100};
 		}
 		
@@ -87,6 +89,7 @@
 
             //When the socket connects successfully
             socket.on('connect', function () {
+				//setCalls();
 				setup();				
 			});
 			
@@ -102,7 +105,7 @@
 			
             socket.on('update', function(data)
 			{
-				draws[data.time] = data;
+				draws = data.data;
 				draw();
 			});
 			
